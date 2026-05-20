@@ -49,7 +49,7 @@ Zwei PDFs im Google Drive sind als Vapi-Knowledge-Base verbunden:
 
 | Datei              | Inhalt                          |
 |--------------------|---------------------------------|
-| `Lebenslauf_VC.pdf`| CV-Daten                        |
+| `Lebenslauf_CV.pdf`| CV-Daten                        |
 | `Interessen.pdf`   | Hobbies, Interessen, Ambitionen |
 
 Die IDs werden in der Make-Blueprint als `<CV_FILE_ID>` und
