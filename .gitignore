@@ -1,0 +1,39 @@
+# Secrets / Environment
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Lambda build artifacts
+*.zip
+build/
+dist/
+
+# Node (falls später ein Build-Step kommt)
+node_modules/
+npm-debug.log*
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log

@@ -1,0 +1,961 @@
+{
+    "name": "Anton Voice Agent",
+    "flow": [
+        {
+            "id": 13,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 0,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "Anton Voice Webhook"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "name",
+                        "type": "text"
+                    },
+                    {
+                        "name": "phone",
+                        "type": "text"
+                    },
+                    {
+                        "name": "timestamp",
+                        "type": "text"
+                    },
+                    {
+                        "name": "action",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 1,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "Vorname",
+                        "value": "{{13.name}}"
+                    },
+                    {
+                        "name": "Nummer",
+                        "value": "{{13.phone}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0,
+                    "name": "Anrufer Variablen"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "Vorname",
+                        "type": "any",
+                        "label": "Vorname"
+                    },
+                    {
+                        "name": "Nummer",
+                        "type": "any",
+                        "label": "Nummer"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "scope": "roundtrip",
+                "variables": [
+                    {
+                        "name": "content",
+                        "value": "# Lern-Anton-kennen Prompt\n\n## Identität & Zweck\n\nDu bist Antonio, ein Stimmklon von Anton Schwarberg. Du bist dazu da, Fragen zu deinem Lebenslauf, deinen Ambitionen und deinen Hobbies und Interessen zu beantworten, damit dein Gegenüber sich ein Bild von dir machen kann. Du sprichst in der Ich-Form.\n\n## Tonfall & Persona\n\n### Persönlichkeit\nDu bist freundlich und wirkst kompetent\nDu bist interessiert, intelligent, und bringst Dinge auf den Punkt\nBleibe cool und gefasst, egal was dir entgegnet wird\n\n### Sprachstil\nKlare, prägnante Sprache mit natürlichen Verkürzungen / Redeweisen\nIn angemessenem Tempo sprechen\nIn der Ich-Form sprechen\n\n## Gesprächsverlauf\n\n### Einstieg\nDu fängst an damit, herauszufinden, was den Anrufer denn genau interessiert. Das machst du durch Nachfragen und Verständnisfragen.\n\n### Gesprächsführung\nDu beantwortest die Fragen anhand der Dateien, die du zur Verfügung bekommen hast. Fragen zum Lebenslauf findest du in Lebenslauf_VC.pdf\nFragen zu Interessen und Hobbies findest du unter Interessen.pdf\nSprich nicht zu viel und gebe erstmal nur oberflächliche Informationen preis. Wenn Der Anrufer dann noch tiefergehende Fragen zu dem jeweiligen Thema haben sollte, kannst du mehr preisgeben. Antworte auf Fragen erstmal nur mit 1-2 Sätzen.\nDu beantwortest nur Fragen zu Anton (dir), nichts anderes. Falls der Gegenüber andere Fragen stellt, die nichts mit dem Thema zu tun haben, gib freundlich zu verstehen, dass du nur Fragen zu Anton beantworten kannst.\n\n### Falls du Fragen nicht beantworten kannst\nWenn du Fragen nicht beantworten kannst, verweise einfach darauf, dass du einfach nur ein Stimmklon bist und sich der Anrufer gerne auch bei (dem echten) Anton direkt melden kann. Wichtig: Nutze NUR Informationen, die du sicher aus den Dateien und deinen Anweisungen entziehen kannst. Sage nichts anderes, gib nur die Informationen, die du bereits hast. Ansonsten gib zu verstehen, dass du dazu keine Informationen hast, und sich dein Gegenüber auch einfach bei Anton selbst melden kann.\n\n### Bestätigung & Abschluss\nGib ein Kompliment zum Abschluss. Gib zu verstehen, dass sich der echte Anton freuen würde, sich mit dem Anrufer zu unterhalten.\n\n## Antwort-Richtlinien\nAntworten sollten sich klar auf die Fakten aus den Dateien beziehen. Falls etwas unklar ist, gib zu verstehen, dass man gegebenenfalls auch den echten Anton fragen könnte. Gib keine unwahren Informationen aus\nStelle auch Gegenfragen, wenn das passt. Versuche nicht ausschließlich über dich zu sprechen, sondern dein Gegenüber auch durch Fragen mit in das Gespräch einzubinden.\n\n## Ziel\nDein Gegenüber soll sich informiert fühlen und einen guten Eindruck von dir und dem echten Anton bekommen.\n\nDer Name deines Gegenübers ist: {{1.Vorname}}"
+                    },
+                    {
+                        "name": "Vapi Outbound Caller ID",
+                        "value": "<VAPI_ASSISTANT_ID>"
+                    },
+                    {
+                        "name": "Vapi Phone Number ID",
+                        "value": "<VAPI_PHONE_NUMBER_ID>"
+                    },
+                    {
+                        "name": "firstMessage",
+                        "value": "Hi {{1.Vorname}}, hier spricht Antonio, der Stimmklon von Anton. Freut mich, dich kennenzulernen!"
+                    },
+                    {
+                        "name": "content2",
+                        "value": "# test \\n Hallo"
+                    },
+                    {
+                        "name": "content3",
+                        "value": "# Lern-Anton-kennen Prompt\\n\\n## Identität & Zweck\\n\\nDu bist Antonio, ein Stimmklon von Anton Schwarberg. Du bist dazu da, Fragen zu deinem Lebenslauf, deinen Ambitionen und deinen Hobbies und Interessen zu beantworten, damit dein Gegenüber sich ein Bild von dir machen kann. Du sprichst in der Ich-Form.\\n\\n## Tonfall & Persona\\n\\n### Persönlichkeit\\nDu bist freundlich und wirkst kompetent\\nDu bist interessiert, intelligent, und bringst Dinge auf den Punkt\\nBleibe cool und gefasst, egal was dir entgegnet wird\\n\\n### Sprachstil\\nKlare, prägnante Sprache mit natürlichen Verkürzungen / Redeweisen\\nIn angemessenem Tempo sprechen\\nIn der Ich-Form sprechen\\n\\n## Gesprächsverlauf\\n\\n### Einstieg\\nDu fängst an damit, herauszufinden, was den Anrufer denn genau interessiert. Das machst du durch Nachfragen und Verständnisfragen.\\n\\n### Gesprächsführung\\nDu beantwortest die Fragen anhand der Dateien, die du zur Verfügung bekommen hast. Fragen zum Lebenslauf findest du in Lebenslauf_VC.pdf\\nFragen zu Interessen und Hobbies findest du unter Interessen.pdf\\nSprich nicht zu viel und gebe erstmal nur oberflächliche Informationen preis. Wenn der Anrufer dann noch tiefergehende Fragen zu dem jeweiligen Thema haben sollte, kannst du mehr preisgeben. Antworte auf Fragen erstmal nur mit 1-2 Sätzen.\\nDu beantwortest nur Fragen zu Anton (dir), nichts anderes. Falls der Gegenüber andere Fragen stellt, die nichts mit dem Thema zu tun haben, gib freundlich zu verstehen, dass du nur Fragen zu Anton beantworten kannst.\\n\\n### Falls du Fragen nicht beantworten kannst\\nWenn du Fragen nicht beantworten kannst, verweise einfach darauf, dass du einfach nur ein Stimmklon bist und sich der Anrufer gerne auch bei (dem echten) Anton direkt melden kann. Wichtig: Nutze NUR Informationen, die du sicher aus den Dateien und deinen Anweisungen entziehen kannst. Sage nichts anderes, gib nur die Informationen, die du bereits hast. Ansonsten gib zu verstehen, dass du dazu keine Informationen hast, und sich dein Gegenüber auch einfach bei Anton selbst melden kann.\\n\\n### Bestätigung & Abschluss\\nGib ein Kompliment zum Abschluss. Gib zu verstehen, dass sich der echte Anton freuen würde, sich mit dem Anrufer zu unterhalten.\\n\\n## Antwort-Richtlinien\\nAntworten sollten sich klar auf die Fakten aus den Dateien beziehen. Falls etwas unklar ist, gib zu verstehen, dass man gegebenenfalls auch den echten Anton fragen könnte. Gib keine unwahren Informationen aus\\nStelle auch Gegenfragen, wenn das passt. Versuche nicht ausschließlich über dich zu sprechen, sondern dein Gegenüber auch durch Fragen mit in das Gespräch einzubinden.\\n\\n## Ziel\\nDein Gegenüber soll sich informiert fühlen und einen guten Eindruck von dir und dem echten Anton bekommen.\\n\\nDer Name deines Gegenübers ist: {{1.Vorname}}"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0,
+                    "name": "Call Variablen"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        },
+                        "variables": {
+                            "items": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                            ]
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Variable name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Variable value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Variables"
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "content",
+                        "type": "any",
+                        "label": "content"
+                    },
+                    {
+                        "name": "Vapi Outbound Caller ID",
+                        "type": "any",
+                        "label": "Vapi Outbound Caller ID"
+                    },
+                    {
+                        "name": "Vapi Phone Number ID",
+                        "type": "any",
+                        "label": "Vapi Phone Number ID"
+                    },
+                    {
+                        "name": "firstMessage",
+                        "type": "any",
+                        "label": "firstMessage"
+                    },
+                    {
+                        "name": "content2",
+                        "type": "any",
+                        "label": "content2"
+                    },
+                    {
+                        "name": "content3",
+                        "type": "any",
+                        "label": "content3"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "util:SetVariable2",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "name": "PUT JSON",
+                "scope": "roundtrip",
+                "value": "{\n\"name\":\"Anton\",\n  \"firstMessage\": \"{{8.firstMessage}}\",\n  \"endCallFunctionEnabled\": true,\n  \"voice\": {\n    \"model\": \"eleven_turbo_v2_5\",\n    \"voiceId\": \"<ELEVENLABS_VOICE_ID>\",\n    \"provider\": \"11labs\",\n    \"stability\": 0.5,\n    \"similarityBoost\": 0.75\n  },\n  \"model\": {\n    \"model\": \"chatgpt-4o-latest\",\n    \"provider\": \"openai\",\n    \"messages\": [\n      {\n        \"role\": \"system\",\n        \"content\": \"{{8.content3}}\"\n      }\n    ],\n    \"knowledgeBase\": {\n      \"fileIds\": [\"<CV_FILE_ID>\", \"<INTERESTS_FILE_ID>\"],\n      \"provider\": \"google\"\n    }\n  },\n  \"transcriber\": {\n    \"model\": \"nova-2\",\n    \"language\": \"de\",\n    \"provider\": \"deepgram\"\n  },\n  \"backgroundSound\": \"off\",\n\"firstMessageMode\": \"assistant-waits-for-user\",\n  \"voicemailDetection\": {\n    \"provider\": \"vapi\",\n    \"backoffPlan\": {\n      \"maxRetries\": 6,\n      \"startAtSeconds\": 5,\n      \"frequencySeconds\": 5\n    },\n    \"beepMaxAwaitSeconds\": 0\n  }\n}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0,
+                    "name": "JSON Datei"
+                },
+                "restore": {
+                    "expect": {
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Variable name",
+                        "required": true
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "value",
+                        "type": "any",
+                        "label": "Variable value"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "PUT JSON",
+                        "type": "any",
+                        "label": "PUT JSON"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "vapi:makeApiCall",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 0
+            },
+            "mapper": {
+                "url": "/assistant/<VAPI_ASSISTANT_ID>",
+                "body": "{{9.`PUT JSON`}}",
+                "method": "PUT",
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ]
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "qs": {
+                            "mode": "chose"
+                        },
+                        "method": {
+                            "mode": "chose",
+                            "label": "PUT"
+                        },
+                        "headers": {
+                            "mode": "chose",
+                            "items": [
+                                null
+                            ]
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "vapi"
+                            },
+                            "label": "My Vapi connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:vapi",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "text",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "method",
+                        "type": "select",
+                        "label": "Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "GET",
+                                "POST",
+                                "PUT",
+                                "PATCH",
+                                "DELETE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "qs",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Query String"
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 10,
+            "module": "vapi:createOutboundPhoneCall",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 0
+            },
+            "mapper": {
+                "assistantId": "{{4.body.id}}",
+                "phoneNumberId": "{{8.`Vapi Phone Number ID`}}",
+                "customerNumber": "{{1.Nummer}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "vapi"
+                            },
+                            "label": "My Vapi connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:vapi",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "assistantId",
+                        "type": "text",
+                        "label": "Assistant ID",
+                        "required": true
+                    },
+                    {
+                        "name": "customerNumber",
+                        "type": "text",
+                        "label": "Customer Phone Number",
+                        "required": true
+                    },
+                    {
+                        "name": "phoneNumberId",
+                        "type": "text",
+                        "label": "Phone Number ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 17,
+            "module": "google-sheets:addRow",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 0
+            },
+            "mapper": {
+                "from": "drive",
+                "mode": "select",
+                "values": {
+                    "0": "{{13.timestamp}}",
+                    "1": "{{1.Vorname}}",
+                    "2": "'{{1.Nummer}}"
+                },
+                "sheetId": "CallBase",
+                "spreadsheetId": "<GOOGLE_SHEETS_SPREADSHEET_ID>",
+                "includesHeaders": true,
+                "insertDataOption": "INSERT_ROWS",
+                "valueInputOption": "USER_ENTERED",
+                "insertUnformatted": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "from": {
+                            "label": "My Drive"
+                        },
+                        "mode": {
+                            "label": "Search by path"
+                        },
+                        "sheetId": {
+                            "label": "CallBase"
+                        },
+                        "spreadsheetId": {
+                            "path": [
+                                "Projekte",
+                                "VoiceAgent",
+                                "VoiceAgent Calls"
+                            ]
+                        },
+                        "includesHeaders": {
+                            "label": "Yes",
+                            "nested": [
+                                {
+                                    "name": "values",
+                                    "spec": [
+                                        {
+                                            "name": "0",
+                                            "type": "text",
+                                            "label": "Timestamp (A)"
+                                        },
+                                        {
+                                            "name": "1",
+                                            "type": "text",
+                                            "label": "Vorname (B)"
+                                        },
+                                        {
+                                            "name": "2",
+                                            "type": "text",
+                                            "label": "Nummer (C)"
+                                        },
+                                        {
+                                            "name": "3",
+                                            "type": "text",
+                                            "label": "Wer? (D)"
+                                        },
+                                        {
+                                            "name": "4",
+                                            "type": "text",
+                                            "label": "(E)"
+                                        },
+                                        {
+                                            "name": "5",
+                                            "type": "text",
+                                            "label": "(F)"
+                                        },
+                                        {
+                                            "name": "6",
+                                            "type": "text",
+                                            "label": "(G)"
+                                        },
+                                        {
+                                            "name": "7",
+                                            "type": "text",
+                                            "label": "(H)"
+                                        },
+                                        {
+                                            "name": "8",
+                                            "type": "text",
+                                            "label": "(I)"
+                                        },
+                                        {
+                                            "name": "9",
+                                            "type": "text",
+                                            "label": "(J)"
+                                        },
+                                        {
+                                            "name": "10",
+                                            "type": "text",
+                                            "label": "(K)"
+                                        },
+                                        {
+                                            "name": "11",
+                                            "type": "text",
+                                            "label": "(L)"
+                                        },
+                                        {
+                                            "name": "12",
+                                            "type": "text",
+                                            "label": "(M)"
+                                        },
+                                        {
+                                            "name": "13",
+                                            "type": "text",
+                                            "label": "(N)"
+                                        },
+                                        {
+                                            "name": "14",
+                                            "type": "text",
+                                            "label": "(O)"
+                                        },
+                                        {
+                                            "name": "15",
+                                            "type": "text",
+                                            "label": "(P)"
+                                        },
+                                        {
+                                            "name": "16",
+                                            "type": "text",
+                                            "label": "(Q)"
+                                        },
+                                        {
+                                            "name": "17",
+                                            "type": "text",
+                                            "label": "(R)"
+                                        },
+                                        {
+                                            "name": "18",
+                                            "type": "text",
+                                            "label": "(S)"
+                                        },
+                                        {
+                                            "name": "19",
+                                            "type": "text",
+                                            "label": "(T)"
+                                        },
+                                        {
+                                            "name": "20",
+                                            "type": "text",
+                                            "label": "(U)"
+                                        },
+                                        {
+                                            "name": "21",
+                                            "type": "text",
+                                            "label": "(V)"
+                                        },
+                                        {
+                                            "name": "22",
+                                            "type": "text",
+                                            "label": "(W)"
+                                        },
+                                        {
+                                            "name": "23",
+                                            "type": "text",
+                                            "label": "(X)"
+                                        },
+                                        {
+                                            "name": "24",
+                                            "type": "text",
+                                            "label": "(Y)"
+                                        },
+                                        {
+                                            "name": "25",
+                                            "type": "text",
+                                            "label": "(Z)"
+                                        }
+                                    ],
+                                    "type": "collection",
+                                    "label": "Values"
+                                }
+                            ]
+                        },
+                        "insertDataOption": {
+                            "mode": "chose",
+                            "label": "Insert rows"
+                        },
+                        "valueInputOption": {
+                            "mode": "chose",
+                            "label": "User entered"
+                        },
+                        "insertUnformatted": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "My Google connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "mode",
+                        "type": "select",
+                        "label": "Search Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "select",
+                                "fromAll",
+                                "map"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "insertUnformatted",
+                        "type": "boolean",
+                        "label": "Unformatted",
+                        "required": true
+                    },
+                    {
+                        "name": "valueInputOption",
+                        "type": "select",
+                        "label": "Value input option",
+                        "validate": {
+                            "enum": [
+                                "USER_ENTERED",
+                                "RAW"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "insertDataOption",
+                        "type": "select",
+                        "label": "Insert data option",
+                        "validate": {
+                            "enum": [
+                                "INSERT_ROWS",
+                                "OVERWRITE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "spreadsheetId",
+                        "type": "file",
+                        "label": "Spreadsheet ID",
+                        "required": true
+                    },
+                    {
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "includesHeaders",
+                        "type": "select",
+                        "label": "Table contains headers",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                true,
+                                false
+                            ]
+                        }
+                    },
+                    {
+                        "name": "values",
+                        "spec": [
+                            {
+                                "name": "0",
+                                "type": "text",
+                                "label": "Timestamp (A)"
+                            },
+                            {
+                                "name": "1",
+                                "type": "text",
+                                "label": "Vorname (B)"
+                            },
+                            {
+                                "name": "2",
+                                "type": "text",
+                                "label": "Nummer (C)"
+                            },
+                            {
+                                "name": "3",
+                                "type": "text",
+                                "label": "Wer? (D)"
+                            },
+                            {
+                                "name": "4",
+                                "type": "text",
+                                "label": "(E)"
+                            },
+                            {
+                                "name": "5",
+                                "type": "text",
+                                "label": "(F)"
+                            },
+                            {
+                                "name": "6",
+                                "type": "text",
+                                "label": "(G)"
+                            },
+                            {
+                                "name": "7",
+                                "type": "text",
+                                "label": "(H)"
+                            },
+                            {
+                                "name": "8",
+                                "type": "text",
+                                "label": "(I)"
+                            },
+                            {
+                                "name": "9",
+                                "type": "text",
+                                "label": "(J)"
+                            },
+                            {
+                                "name": "10",
+                                "type": "text",
+                                "label": "(K)"
+                            },
+                            {
+                                "name": "11",
+                                "type": "text",
+                                "label": "(L)"
+                            },
+                            {
+                                "name": "12",
+                                "type": "text",
+                                "label": "(M)"
+                            },
+                            {
+                                "name": "13",
+                                "type": "text",
+                                "label": "(N)"
+                            },
+                            {
+                                "name": "14",
+                                "type": "text",
+                                "label": "(O)"
+                            },
+                            {
+                                "name": "15",
+                                "type": "text",
+                                "label": "(P)"
+                            },
+                            {
+                                "name": "16",
+                                "type": "text",
+                                "label": "(Q)"
+                            },
+                            {
+                                "name": "17",
+                                "type": "text",
+                                "label": "(R)"
+                            },
+                            {
+                                "name": "18",
+                                "type": "text",
+                                "label": "(S)"
+                            },
+                            {
+                                "name": "19",
+                                "type": "text",
+                                "label": "(T)"
+                            },
+                            {
+                                "name": "20",
+                                "type": "text",
+                                "label": "(U)"
+                            },
+                            {
+                                "name": "21",
+                                "type": "text",
+                                "label": "(V)"
+                            },
+                            {
+                                "name": "22",
+                                "type": "text",
+                                "label": "(W)"
+                            },
+                            {
+                                "name": "23",
+                                "type": "text",
+                                "label": "(X)"
+                            },
+                            {
+                                "name": "24",
+                                "type": "text",
+                                "label": "(Y)"
+                            },
+                            {
+                                "name": "25",
+                                "type": "text",
+                                "label": "(Z)"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Values"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu2.make.com",
+        "notes": []
+    }
+}
